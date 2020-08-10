@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+import requests
+from flask import Flask, request
+from gunicorn.app.wsgiapp import WSGIApplication
+
+from pmapi.config import get_config
+from pmapi.controllers.promote import post_promote
+from pmapi.controllers.sign import post_sign
+from pmapi.controllers.sync import get_sync
+from pmapi.controllers.healthcheck import post_healthcheck, get_healthcheck
+
+c = get_config()
+
+def setup_pmapi():
+    if not c["TOKEN"]:
+        data = {
+            "hostname": c["HOSTNAME"],
+            "ip": c["IP"],
+            "state": c["STATE"],
+            "url": c["URL"],
+            "service_type": c["SERVICE_TYPE"],
+        }
+        r = requests.post("https://deployment.unifiedlayer.com/api/1.0.0/register/primemirror", json=data, verify=False)
+        resp = r.json()
+        if "TOKEN" in resp:
+            with open("/etc/default/pmapi", "a") as file:
+                file.write("TOKEN={}".format(resp["TOKEN"]))
+
+
+class DClient(WSGIApplication):
+
+    def __init__(self, app, options=None):
+        self.options = options or {}
+        self.application = app
+        super(WSGIApplication, self).__init__()
+
+    def load_config(self):
+        config = {key: value for key, value in self.options.items()
+                  if key in self.cfg.settings and value is not None}
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
+
+    def load(self):
+        return self.application
+
+
+def create_app():
+    setup_pmapi()
+    app = Flask(__name__)
+
+    @app.route('/', methods=['GET', 'POST'])
+    def healthcheck():
+        if request.method == 'POST':
+            data = request.get_json()
+            return post_healthcheck(data)
+        else:
+            return get_healthcheck()
+
+    @app.route('/promote', methods=['POST'])
+    def promote():
+        if request.method == 'POST':
+            data = request.get_json()
+            return post_promote(data)
+
+    @app.route('/sign', methods=['POST'])
+    def sign():
+        if request.method == 'POST':
+            data = request.get_json()
+            return post_sign(data)
+
+    @app.route('/sync/<repo>', methods=['GET'])
+    def sync(repo):
+        if request.method == 'GET':
+            return get_sync(repo)
+
+    return app
+
+
+if __name__ == "__main__":
+    options = {
+        "bind": "%s:%s" % ("0.0.0.0", "8000"),
+        "workers": 2,
+        "reload-engine": "auto",
+        "spew": False,
+        "access-logformat": "%(h)s %(l)s %(u)s %(t)s '%(r)s' %(s)s %(b)s '%(f)s' '%(a)s'",
+        "disable-redirect-access-to-syslog": True,
+        "log-level": "debug",
+        "capture-output": True,
+        "worker_class": "sync",
+        "timeout": 600
+    }
+    DClient(create_app(), options).run()
