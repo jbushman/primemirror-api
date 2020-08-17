@@ -3,12 +3,12 @@ Description=Primemirror API service
 After=network.target
 
 [Service]
-User=root
-Group=root
-EnvironmentFile=/etc/default/pmapi
+User=mirroradmin
+Group=mirroradmin
+EnvironmentFile=/etc/default/primemirror
 RuntimeDirectory=pmapi
 WorkingDirectory=/opt/pmapi
-ExecStart=/usr/local/bin/pmapi
+ExecStart=/home/mirroradmin/.pyenv/shims/pmapi
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5

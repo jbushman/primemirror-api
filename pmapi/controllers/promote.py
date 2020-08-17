@@ -1,5 +1,4 @@
 import logging
-from flask import request
 
 from pmapi.config import get_config
 from pmapi.services.promote import promote_rpm
@@ -7,7 +6,7 @@ from pmapi.services.promote import promote_rpm
 c = get_config()
 
 
-def post_promote():
+def post_promote(data):
     """
     Promote packages from one repository to another
     Sign packages for the promoted repo
@@ -16,7 +15,6 @@ def post_promote():
     Sync repo to mirrors infrastructure
     :return:
     """
-    data = request.get_json()
     try:
         logging.info("Promoting: {} from {} repo to {} repo".format(data["package"], data["init_repo"],
                                                                     data["dest_repo"]))

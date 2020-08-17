@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pmapi",
-    version="0.0.1",
+    version="0.0.9",
     author="Jacob Bushman",
     author_email="jacob.matthew.bushman@endurance.com",
     description="Primemirror API",
@@ -25,7 +25,9 @@ setup(
         "python-dotenv",
         "requests",
         "flask",
-        "gunicorn"
+        "gunicorn",
+	"paramiko",
+	"pexpect"
     ],
     scripts=["pmapi/pmapi"],
     python_requires=">=3.8"
