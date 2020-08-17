@@ -10,7 +10,7 @@ from pmapi.config import get_config
 from pmapi.controllers.promote import post_promote
 from pmapi.controllers.sign import post_sign
 from pmapi.controllers.sync import get_sync
-from pmapi.controllers.healthcheck import post_healthcheck, get_healthcheck
+from pmapi.controllers.healthcheck import get_healthcheck
 
 c = get_config()
 

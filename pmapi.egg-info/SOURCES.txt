@@ -15,3 +15,7 @@ pmapi/controllers/healthcheck.py
 pmapi/controllers/promote.py
 pmapi/controllers/sign.py
 pmapi/controllers/sync.py
+pmapi/services/__init__.py
+pmapi/services/promote.py
+pmapi/services/sign.py
+pmapi/services/sync.py
