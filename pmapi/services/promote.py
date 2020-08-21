@@ -25,18 +25,38 @@ def promote_rpm(init_repo, dest_repo, package, repo):
 def sign_rpm(repo, rpm):
     try:
         if repo == "alpha":
+            with open("/home/mirroradmin/.rpmmacros", "w") as f:
+                f.write("% _signature gpg")
+                f.write("% _gpg_path / home / mirroradmin /.gnupg")
+                f.write("% _gpg_name EIG Package Management")
+                f.write("% __gpg / bin / gpg1")
             child = pexpect.spawn("rpm --addsign {}".format(rpm))
             child.expect("Enter passphrase: ")
             child.sendline(c["ALPHA_PASSPHRASE"])
         elif repo == "beta":
+            with open("/home/mirroradmin/.rpmmacros", "w") as f:
+                f.write("% _signature gpg")
+                f.write("% _gpg_path / home / mirroradmin /.gnupg")
+                f.write("% _gpg_name EIG Beta Signing Authority")
+                f.write("% __gpg / bin / gpg1")
             child = pexpect.spawn("rpm --addsign {}".format(rpm))
             child.expect("Enter passphrase: ")
             child.sendline(c["BETA_PASSPHRASE"])
         elif repo == "staging":
+            with open("/home/mirroradmin/.rpmmacros", "w") as f:
+                f.write("% _signature gpg")
+                f.write("% _gpg_path / home / mirroradmin /.gnupg")
+                f.write("% _gpg_name EIG Staging Signing Authority")
+                f.write("% __gpg / bin / gpg1")
             child = pexpect.spawn("rpm --addsign {}".format(rpm))
             child.expect("Enter passphrase: ")
             child.sendline(c["STAGING_PASSPHRASE"])
         elif repo == "production":
+            with open("/home/mirroradmin/.rpmmacros", "w") as f:
+                f.write("% _signature gpg")
+                f.write("% _gpg_path / home / mirroradmin /.gnupg")
+                f.write("% _gpg_name EIG Production Signing Authority")
+                f.write("% __gpg / bin / gpg1")
             child = pexpect.spawn("rpm --addsign {}".format(rpm))
             child.expect("Enter passphrase: ")
             child.sendline(c["PRODUCTION_PASSPHRASE"])
