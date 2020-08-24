@@ -6,13 +6,13 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pmapi",
-    version="0.0.13",
+    version="0.0.24",
     author="Jacob Bushman",
     author_email="jacob.matthew.bushman@endurance.com",
     description="Primemirror API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://stash.endurance.com/projects/DEVOPS/repos/deployment_client/browse",
+    url="https://stash.endurance.com/projects/DEVOPS/repos/primemirror_api/browse",
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

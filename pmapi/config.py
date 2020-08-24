@@ -5,10 +5,10 @@ load_dotenv("/etc/default/pmapi")
 
 def get_config():
     results = {}
-    results["alpha"] = {"local": "/var/www/html/mirrors/alpha", "remote": "/data/staging/alpha/"}
-    results["beta"] = {"local": "/var/www/html/mirrors/beta", "remote": "/data/staging/beta/"}
-    results["staging"] = {"local": "/var/www/html/mirrors/staging", "remote": "/data/staging/staging/"}
-    results["production"] = {"local": "/var/www/html/mirrors/production", "remote": "/data/staging/production/"}
+    results["alpha"] = {"local": "/var/www/html/mirrors/alpha/", "remote": "/data/staging/alpha/"}
+    results["beta"] = {"local": "/var/www/html/mirrors/beta/", "remote": "/data/staging/beta/"}
+    results["staging"] = {"local": "/var/www/html/mirrors/staging/", "remote": "/data/staging/staging/"}
+    results["production"] = {"local": "/var/www/html/mirrors/production/", "remote": "/data/staging/production/"}
     results["HOSTNAME"] = os.getenv("HOSTNAME")
     results["IP"] = os.getenv("IP")
     results["STATE"] = os.getenv("STATE")

@@ -8,8 +8,7 @@ from pmapi.services.promote import sign_rpm
 c = get_config()
 
 
-def post_sign():
-    data = request.get_json()
+def post_sign(data):
     try:
         sign = sign_rpm(data["repo"], data["rpm"])
         if sign:

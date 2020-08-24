@@ -11,6 +11,7 @@ from pmapi.controllers.promote import post_promote
 from pmapi.controllers.sign import post_sign
 from pmapi.controllers.sync import get_sync
 from pmapi.controllers.healthcheck import get_healthcheck
+from pmapi.controllers.delete import get_completely_delete_rpm, post_delete_rpm
 
 c = get_config()
 
@@ -54,26 +55,37 @@ def create_app():
     setup_pmapi()
     app = Flask(__name__)
 
-    @app.route('/', methods=['GET'])
+    @app.route("/", methods=["GET"])
     def healthcheck():
         return get_healthcheck()
 
-    @app.route('/promote', methods=['POST'])
+    @app.route("/promote", methods=["POST"])
     def promote():
-        if request.method == 'POST':
+        if request.method == "POST":
             data = request.get_json()
             return post_promote(data)
 
-    @app.route('/sign', methods=['POST'])
+    @app.route("/sign", methods=["POST"])
     def sign():
-        if request.method == 'POST':
+        if request.method == "POST":
             data = request.get_json()
             return post_sign(data)
 
-    @app.route('/sync/<repo>', methods=['GET'])
+    @app.route("/sync/<repo>", methods=["GET"])
     def sync(repo):
-        if request.method == 'GET':
+        if request.method == "GET":
             return get_sync(repo)
+
+    @app.route("/delete", methods=["POST"])
+    def del_rpm():
+        if request.method == "POST":
+            data = request.get_json()
+            return post_delete_rpm(data)
+
+    @app.route("/delete/all/<rpm>", methods=["GET"])
+    def del_comp_rpm(rpm):
+        if request.method == "GET":
+            return get_completely_delete_rpm(rpm)
 
     return app
 

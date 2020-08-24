@@ -11,6 +11,7 @@ pmapi.egg-info/not-zip-safe
 pmapi.egg-info/requires.txt
 pmapi.egg-info/top_level.txt
 pmapi/controllers/__init__.py
+pmapi/controllers/delete.py
 pmapi/controllers/healthcheck.py
 pmapi/controllers/promote.py
 pmapi/controllers/sign.py

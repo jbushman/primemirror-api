@@ -18,8 +18,8 @@ def post_promote(data):
     try:
         logging.info("Promoting: {} from {} repo to {} repo".format(data["package"], data["init_repo"],
                                                                     data["dest_repo"]))
-        init_repo = c[data["init_repo"]]["local"] + "/" + "centos" + str(data["elver"]) + "/" + data["arch"]
-        dest_repo = c[data["dest_repo"]]["local"] + "/" + "centos" + str(data["elver"]) + "/" + data["arch"]
+        init_repo = c[data["init_repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"]
+        dest_repo = c[data["dest_repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"]
 
         result = promote_rpm(init_repo, dest_repo, data["package"], data["dest_repo"])
         if result:

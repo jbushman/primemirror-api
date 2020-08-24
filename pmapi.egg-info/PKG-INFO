@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: pmapi
-Version: 0.0.12
+Version: 0.0.24
 Summary: Primemirror API
-Home-page: https://stash.endurance.com/projects/DEVOPS/repos/deployment_client/browse
+Home-page: https://stash.endurance.com/projects/DEVOPS/repos/primemirror_api/browse
 Author: Jacob Bushman
 Author-email: jacob.matthew.bushman@endurance.com
 License: UNKNOWN
