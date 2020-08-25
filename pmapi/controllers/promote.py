@@ -23,19 +23,22 @@ def post_promote(data):
 
         result = promote_rpm(init_repo, dest_repo, data["package"], data["dest_repo"])
         if result:
+            logging.info("{} has been promoted to {}".format(data["package"], data["dest_repo"]))
             response = {
                 "status": "success",
                 "message": "Package has been promoted."
             }
             return response, 200
         else:
+            logging.info("Failed to promote {} to {}".format(data["package"], data["dest_repo"]))
             response = {
                 "status": "failure",
-                "message": "Unable to promote package"
+                "message": "failed to promote {} to {}".format(data["package"], data["dest_repo"])
             }
             return response, 409
 
     except Exception as e:
+        logging.error("Package promotion failed: {}".format(e))
         response = {
             "status": "failure",
             "message": "Package promotion failed.",

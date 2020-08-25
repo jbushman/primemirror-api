@@ -22,4 +22,5 @@ def get_config():
     results["BETA_PASSPHRASE"] = os.getenv("BETA_PASSPHRASE")
     results["STAGING_PASSPHRASE"] = os.getenv("STAGING_PASSPHRASE")
     results["PRODUCTION_PASSPHRASE"] = os.getenv("PRODUCTION_PASSPHRASE")
+    results["DEPLOYMENT_SERVER_URL"] = os.getenv("DEPLOYMENT_SERVER_URL")
     return results

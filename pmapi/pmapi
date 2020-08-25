@@ -26,7 +26,8 @@ def setup_pmapi():
             "service_type": c["SERVICE_TYPE"],
             "roles": "'service', 'primemirror'",
         }
-        r = requests.post("https://deployment.unifiedlayer.com/api/1.0.0/register/service", json=data, verify=False)
+        logging.info("Registering Service: ".format(data))
+        r = requests.post("{}/register/service".format(c["DEPLOYMENT_SERVER_URL"]), json=data, verify=False)
         resp = r.json()
         if "TOKEN" in resp:
             os.environ["TOKEN"] = resp["TOKEN"]
