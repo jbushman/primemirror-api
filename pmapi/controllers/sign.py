@@ -7,9 +7,10 @@ c = get_config()
 
 
 def post_sign(data):
+    package = c[data["repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"] + "/" + data["rpm"]
     try:
         logging.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
-        sign = sign_rpm(data["repo"], data["rpm"])
+        sign = sign_rpm(data["repo"], package)
         if sign:
             logging.info("RPM {} successfully signed for {}".format(data["rpm"], data["repo"]))
             response = {
