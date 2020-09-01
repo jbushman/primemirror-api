@@ -54,8 +54,8 @@ def sync_directory(remote, local, remote_host, remote_user, commands=None):
         rsyncopts = "-rlptgoH --delay-updates --stats"
         remotersyncopt = "-e 'ssh -i /home/mirroradmin/.ssh/id_rsa'"
 
-        cmd = "/usr/bin/rsync --delete {} {} {} {}@{} {}".format(rsyncopts, remotersyncopt, local, remote_user,
-                                                                 remote_host, remote)
+        cmd = "/usr/bin/rsync --delete -rlptgoH --delay-updates --stats -e 'ssh -i /home/mirroradmin/.ssh/id_rsa' {} {}@{}:{}".format(local, remote_user, remote_host, remote)
+        print(cmd)
         stat = os.system(cmd)
         if stat != 0:
             raise Exception("Error with rsync.")

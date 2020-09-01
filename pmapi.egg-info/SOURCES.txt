@@ -16,6 +16,7 @@ pmapi/controllers/healthcheck.py
 pmapi/controllers/promote.py
 pmapi/controllers/sign.py
 pmapi/controllers/sync.py
+pmapi/controllers/webui.py
 pmapi/services/__init__.py
 pmapi/services/delete.py
 pmapi/services/promote.py
