@@ -7,8 +7,8 @@ c = get_config()
 
 
 def post_sign(data):
-    package = c[data["repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"] + "/" + data["rpm"]
     try:
+        package = c[data["repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"] + "/" + data["rpm"]
         logging.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
         sign = sign_rpm(data["repo"], package)
         if sign:
@@ -30,6 +30,7 @@ def post_sign(data):
         response = {
             "status": "failure",
             "message": "POST sign failed.",
+            "data": data,
             "exception": str(e)
         }
         return response, 409
