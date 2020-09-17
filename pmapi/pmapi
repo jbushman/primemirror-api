@@ -55,7 +55,7 @@ class Pmapi(WSGIApplication):
 
 
 def create_app():
-    setup_pmapi()
+#    setup_pmapi()
     app = Flask(__name__)
 
     @app.route("/", methods=["GET"])
