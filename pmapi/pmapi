@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+from pmapi.config import get_config
+from pmapi.controllers.sync import get_sync
+from pmapi.controllers.sign import post_sign
+from pmapi.controllers.promote import post_promote
+from pmapi.controllers.webui import post_deploy_webui
+from pmapi.controllers.healthcheck import get_healthcheck
+from pmapi.controllers.delete import get_completely_delete_rpm, post_delete_rpm
 
 import os
 import logging
@@ -7,13 +14,6 @@ import requests
 from flask import Flask, request
 from gunicorn.app.wsgiapp import WSGIApplication
 
-from pmapi.config import get_config
-from pmapi.controllers.sync import get_sync
-from pmapi.controllers.sign import post_sign
-from pmapi.controllers.promote import post_promote
-from pmapi.controllers.webui import post_deploy_webui
-from pmapi.controllers.healthcheck import get_healthcheck
-from pmapi.controllers.delete import get_completely_delete_rpm, post_delete_rpm
 
 c = get_config()
 

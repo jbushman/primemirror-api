@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pmapi/pmapi
+pipenv run pmapi/pmapi
