@@ -9,19 +9,15 @@ c = get_config()
 repo_cfg = {
     'alpha': {
         'gpg_name':     'EIG Package Management',
-        'passphrase':   'ALPHA_PASSPHRASE'
         },
     'beta': {
         'gpg_name':     'EIG Beta Signing Authority',
-        'passphrase':   'BETA_PASSPHRASE'
         },
     'staging': {
         'gpg_name':     'EIG Staging Signing Authority',
-        'passphrase':   'STAGING_PASSPHRASE'
         },
     'production': {
         'gpg_name':     'EIG Production Signing Authority',
-        'passphrase':   'PRODUCTION_PASSPHRASE'
         }
 }
 
