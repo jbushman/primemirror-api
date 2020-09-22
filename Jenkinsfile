@@ -70,7 +70,6 @@ pipeline {
               dist/pmapi.spec --sources /tmp/pmapi
               sudo -u mirroradmin cp /var/lib/mock/${mock_cfg}-${JOB_BASE_NAME}:${BUILD_ID}/result/*.src.rpm /tmp/pmapi/
             """
-        }
       }
     }
 
