@@ -41,7 +41,7 @@ pipeline {
     stage('Create tar archive') {
       steps {
             sh """
-                mkdir /tmp/pmapi
+                mkdir -p /tmp/pmapi
                 tar --exclude-vcs --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' -cvzf /tmp/pmapi/pmapi-${env.PKG_VERSION}.tar.gz . 
             """
       }
