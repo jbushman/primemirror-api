@@ -1,0 +1,78 @@
+@Library('eigi-jenkins-library')_
+
+def mock_cfg
+def pkg_version
+
+pipeline {
+  agent {label 'mockbuild'}
+  parameters {
+    choice(
+        name:       'distro'
+        choices:    ['f32', 'centos7', 'centos6'],
+        description:'Target Linux distribution'
+    )
+  }
+
+  stages {
+    stage('Set version') {
+        steps {
+            script {
+                pkg_version = sh(returnStdout: true, script: "python setup.py --version").trim()
+            }
+        }
+
+    }
+    stage('Set mock configuration') {
+        steps {
+            script {
+                switch ( "{$params.distro}" ) {
+                    case "f32":
+                        mock_cfg = "fedora-32-x86_64-ul"
+
+                    case "centos7":
+                        mock_cfg = "epel-7-x86_64-ul"
+
+                    case "centos6":
+                        mock_cfg = "epel-6-x86_64-ul"
+
+                    default:
+                        error("Invalid value for distro: ${params.distro}")
+                }
+            }
+        }
+    }
+
+    stage('Create tar archive') {
+      steps {
+            sh """
+                mkdir /tmp/pmapi
+                tar --exclude-vcs --transform='s|^\\./|./pmapi-${pkg_version}/|' /tmp/pmapi/pmapi-${pkg_version}.tar.gz . 
+            """
+      }
+    }
+
+
+    stage('Generate RPM specfile') {
+      steps {
+        dir("${WORKSPACE}/${PKG_NAME}"){
+            sh """
+                python setup.py bdist_rpm --spec-only
+            """
+        }
+      }
+    }
+
+    stage('Build Source RPM') {
+      steps {
+          sh"""
+              mock -r ${mock_cfg}
+              --uniqueext="${JOB_BASE_NAME}:${BUILD_ID}" --buildsrpm --spec
+              dist/pmapi.spec --sources /tmp/pmapi
+              sudo -u mirroradmin cp /var/lib/mock/${mock_cfg}-${JOB_BASE_NAME}:${BUILD_ID}/result/*.src.rpm /tmp/pmapi/
+            """
+        }
+      }
+    }
+
+  }
+}
