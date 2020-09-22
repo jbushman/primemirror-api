@@ -7,7 +7,7 @@ pipeline {
   agent {label 'mockbuild'}
   parameters {
     choice(
-        name:       'distro'
+        name:       'distro',
         choices:    ['f32', 'centos7', 'centos6'],
         description:'Target Linux distribution'
     )
