@@ -1,7 +1,6 @@
 @Library('eigi-jenkins-library')_
 
 def mock_cfg
-def pkg_version
 
 pipeline {
   agent {label 'mockbuild'}
@@ -13,15 +12,12 @@ pipeline {
     )
   }
 
-  stages {
-    stage('Set version') {
-        steps {
-            script {
-                pkg_version = sh(returnStdout: true, script: "python setup.py --version").trim()
-            }
-        }
+  environment {
+    PKG_VERSION = sh(returnStdout: true, script: "python setup.py --version").trim()
 
-    }
+  }
+
+  stages {
     stage('Set mock configuration') {
         steps {
             script {
@@ -46,7 +42,7 @@ pipeline {
       steps {
             sh """
                 mkdir /tmp/pmapi
-                tar --exclude-vcs --transform='s|^\\./|./pmapi-${pkg_version}/|' /tmp/pmapi/pmapi-${pkg_version}.tar.gz . 
+                tar --exclude-vcs --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' /tmp/pmapi/pmapi-${env.PKG_VERSION}.tar.gz . 
             """
       }
     }
