@@ -48,13 +48,23 @@ pipeline {
     }
 
 
-    stage('Generate RPM specfile') {
+    stage('Generate RPM spec file') {
         steps {
             sh """
                 python setup.py bdist_rpm --spec-only
             """
         }
     }
+
+    stage('Patch RPM spec file') {
+        steps {
+            sh """
+              perl -pi -E 'if(/\\%description/) { say "Requires:\\tpython3(\$_)\\nBuildRequires:\\tpython3"; say ""}' dist/pmapi.spec
+ 
+            """
+        }
+    }
+
 
     stage('Build Source RPM') {
       steps {
