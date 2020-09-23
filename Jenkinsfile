@@ -22,18 +22,17 @@ pipeline {
         steps {
             script {
                 echo "The distro param is " + params.distro
-                switch ( params.distro ) {
-                    case "f32":
-                        mock_cfg = "fedora-32-x86_64-ul"
-
-                    case "centos7":
-                        mock_cfg = "epel-7-x86_64-ul"
-
-                    case "centos6":
-                        mock_cfg = "epel-6-x86_64-ul"
-
-                    default:
-                        error("Invalid value for distro: ${params.distro}")
+                if ( params.distro  == "f32") {
+                    mock_cfg = "fedora-32-x86_64-ul"
+                }
+                else if ( params.distro  == "centos7") {
+                    mock_cfg = "epel-7-x86_64-ul"
+                }
+                else if ( params.distro  == "centos6") {
+                    mock_cfg = "epel-6-x86_64-ul"
+                }
+                else {
+                    error("Invalid value for distro: ${params.distro}")
                 }
             }
         }
