@@ -21,6 +21,7 @@ pipeline {
     stage('Set mock configuration') {
         steps {
             script {
+                echo "The distro param is " + params.distro
                 switch ( params.distro ) {
                     case "f32":
                         mock_cfg = "fedora-32-x86_64-ul"
