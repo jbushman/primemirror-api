@@ -82,18 +82,18 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                sh """
-                    rm -rf /tmp/pmapi:${BUILD_ID}
-                """
-                echo "Pipeline result: ${currentBuild.result}"
-                echo "Pipeline currentResult: ${currentBuild.currentResult}"
-                notifyBitbucket()
-            }
-        }
-    }
-
   }
+  post {
+      always {
+          script {
+              sh """
+                  rm -rf /tmp/pmapi:${BUILD_ID}
+              """
+              echo "Pipeline result: ${currentBuild.result}"
+              echo "Pipeline currentResult: ${currentBuild.currentResult}"
+              notifyBitbucket()
+          }
+      }
+  }
+
 }
