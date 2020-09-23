@@ -78,11 +78,12 @@ pipeline {
     stage('Build binary RPM') {
         steps {
             sh "mock -r ${mock_cfg} --uniqueext='${JOB_BASE_NAME}:${BUILD_ID}' /tmp/pmapi:${BUILD_ID}/*src.rpm "
-            sh "cp /var/lib/mock/${MOCK_CFG}-${JOB_BASE_NAME}:${BUILD_ID}/result/${pkgName}*noarch.rpm /tmp/pmapi" 
+            sh "cp /var/lib/mock/${mock_cfg}-${JOB_BASE_NAME}:${BUILD_ID}/result/pmapi*noarch.rpm /tmp/pmapi:${BUILD_ID}" 
         }
     }
 
   }
+
   post {
       always {
           script {
