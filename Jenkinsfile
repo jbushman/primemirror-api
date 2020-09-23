@@ -41,8 +41,9 @@ pipeline {
     stage('Create tar archive') {
       steps {
             sh """
-                mkdir -p /tmp/pmapi
-                tar --exclude-vcs --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' -cvzf /tmp/pmapi/pmapi-${env.PKG_VERSION}.tar.gz . 
+                mkdir -p /tmp/pmapi:${BUILD_ID}
+                tar --exclude-vcs
+                --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' -cvzf /tmp/pmapi:${BUILD_ID}/pmapi-${env.PKG_VERSION}.tar.gz . 
             """
       }
     }
@@ -59,15 +60,15 @@ pipeline {
     stage('Build Source RPM') {
       steps {
           sh"""
-              mock -r ${mock_cfg} --uniqueext="${JOB_BASE_NAME}:${BUILD_ID}" --buildsrpm --spec dist/pmapi.spec --sources /tmp/pmapi 
-              cp /var/lib/mock/${mock_cfg}-${JOB_BASE_NAME}:${BUILD_ID}/result/*.src.rpm /tmp/pmapi/
+              mock -r ${mock_cfg} --uniqueext="${JOB_BASE_NAME}:${BUILD_ID}" --buildsrpm --spec dist/pmapi.spec --sources /tmp/pmapi:${BUILD_ID}
+              cp /var/lib/mock/${mock_cfg}-${JOB_BASE_NAME}:${BUILD_ID}/result/*.src.rpm /tmp/pmapi:${BUILD_ID}/
             """
       }
     }
 
     stage('Build binary RPM') {
         steps {
-            sh "mock -r ${mock_cfg} --uniqueext='${JOB_BASE_NAME}:${BUILD_ID}' /tmp/pmapi*src.rpm "
+            sh "mock -r ${mock_cfg} --uniqueext='${JOB_BASE_NAME}:${BUILD_ID}' /tmp/pmapi:${BUILD_ID}/*src.rpm "
             sh "cp /var/lib/mock/${MOCK_CFG}-${JOB_BASE_NAME}:${BUILD_ID}/result/${pkgName}*noarch.rpm /tmp/pmapi" 
         }
     }
