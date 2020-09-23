@@ -42,8 +42,7 @@ pipeline {
       steps {
             sh """
                 mkdir -p /tmp/pmapi:${BUILD_ID}
-                tar --exclude-vcs
-                --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' -cvzf /tmp/pmapi:${BUILD_ID}/pmapi-${env.PKG_VERSION}.tar.gz . 
+                tar --exclude-vcs --transform='s|^\\./|./pmapi-${env.PKG_VERSION}/|' -cvzf /tmp/pmapi:${BUILD_ID}/pmapi-${env.PKG_VERSION}.tar.gz . 
             """
       }
     }
