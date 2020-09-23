@@ -59,7 +59,7 @@ pipeline {
     stage('Patch RPM spec file') {
         steps {
             sh """
-              perl -pi -E 'if(/\\%description/) { say "Requires:\\tpython3\\nBuildRequires:\\tpython3"; say ""}' dist/pmapi.spec
+              perl -pi -E 'if(/\\%description/) { say "Requires:\\t(\$_)\\nBuildRequires:\\t(\$_)" for qw(python3 python3-setuptools); say ""}' dist/pmapi.spec
  
             """
         }
