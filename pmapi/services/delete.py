@@ -28,9 +28,9 @@ def completely_delete_rpm(package):
         raise e
 
 
-def delete_rpm(repo, elver, arch, package):
+def delete_rpm(repo, distro, arch, package):
     try:
-        full_package = c[repo]["local"] + "/" + "centos" + str(elver) + "/" + arch + "/" + package
+        full_package = c[repo]["local"] + "/" + str(distro) + "/" + arch + "/" + package
         os.remove(full_package)
         update_repo(repo)
         sync_repo(repo)

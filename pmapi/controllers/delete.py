@@ -9,7 +9,7 @@ c = get_config()
 def post_delete_rpm(data):
     try:
         logging.info("Deleting {} from {}: ".format(data["package"], data["repo"]))
-        del_rpm = delete_rpm(data["repo"], data["elver"], data["arch"], data["package"])
+        del_rpm = delete_rpm(data["repo"], data["distro"], data["arch"], data["package"])
         if del_rpm:
             logging.info("RPM {} successfully deleted from {}.".format(data["package"], data["repo"]))
             response = {
