@@ -170,22 +170,18 @@ pipeline {
               
     stage('Update yum repo metadata') {
       steps {
-        dir("${WORKSPACE}/${PKG_NAME}"){
           sh "sudo -u mirroradmin createrepo --update /var/www/html/alpha/${distro}/"
-        }
       }
     }
 
     stage('Refresh promote service cache') {
       steps {
-        dir("${WORKSPACE}/${PKG_NAME}"){
             script {
                 if (distro == "centos6" || distro == "centos7") {
                     def curl_out = sh(returnStdout: true, script: "curl --silent https://promote.unifiedlayer.com/recache/${distro}").trim()
                 }
 
             }
-        }
       }
     }
 
@@ -197,7 +193,7 @@ pipeline {
                     'arch':                 "${env.ARCH_STR}", 
                     'description':          "${env.SUMMARY_STR}", 
                     'epoch':                "${env.EPOCH_STR}", 
-                    'name':                 "${env.PKG_NAME}", 
+                    'name':                 "pmapi", 
                     'package':              "${env.BINARY_RPM}", 
                     'release':              "${env.RELEASE_STR}", 
                     'version':              "${env.VERSION_STR}",
