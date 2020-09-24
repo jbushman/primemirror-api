@@ -33,3 +33,4 @@ def sign_rpm(repo, package):
     except Exception as e:
         logging.error("Failed to sign {} for repo {}: {}".format(package, repo, e))
         return False
+    return True
