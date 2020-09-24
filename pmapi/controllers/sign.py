@@ -8,7 +8,7 @@ c = get_config()
 
 def post_sign(data):
     try:
-        package = c[data["repo"]]["local"] + "centos" + str(data["elver"]) + "/" + data["arch"] + "/" + data["rpm"]
+        package = c[data["repo"]]["local"] + str(data["distro"]) + "/" + data["arch"] + "/" + data["rpm"]
         logging.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
         sign = sign_rpm(data["repo"], package)
         if sign:
