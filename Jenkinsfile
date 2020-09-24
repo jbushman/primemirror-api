@@ -89,7 +89,7 @@ pipeline {
     stage('Collect data from RPM') {
       steps {
           script {
-             env.BINARY_RPM = sh(returnStdout: true, script: "cd /tmp/pmapi:${BUILD_ID}; ls ${PKG_NAME}*rpm | grep '\\(noarch\\|x86_64\\)'").trim();
+             env.BINARY_RPM = sh(returnStdout: true, script: "cd /tmp/pmapi:${BUILD_ID}; ls pmapi*rpm | grep '\\(noarch\\|x86_64\\)'").trim();
              env.VERSION_STR = sh(returnStdout: true, script: "rpm -qp /tmp/pmapi:${BUILD_ID}/${env.BINARY_RPM} --qf '%{VERSION}\n'").trim()
              env.RELEASE_STR = sh(returnStdout: true, script: "rpm -qp /tmp/pmapi:${BUILD_ID}/${env.BINARY_RPM} --qf '%{RELEASE}\n'").trim()
              env.ARCH_STR = sh(returnStdout: true, script: "rpm -qp /tmp/pmapi:${BUILD_ID}/${env.BINARY_RPM} --qf '%{ARCH}\n'").trim()
