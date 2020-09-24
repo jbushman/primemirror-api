@@ -86,8 +86,6 @@ pipeline {
         }
     }
 
-  }
-
     stage('Collect data from RPM') {
       steps {
           script {
