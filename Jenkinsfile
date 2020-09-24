@@ -1,14 +1,13 @@
 @Library('eigi-jenkins-library')_
 
 def mock_cfg
-def distro_str
 
 pipeline {
   agent {label 'mockbuild'}
   parameters {
     choice(
         name:       'distro',
-        choices:    ['f32', 'centos7', 'centos6'],
+        choices:    ['fedora32', 'centos7', 'centos6'],
         description:'Target Linux distribution'
     )
   }
@@ -23,17 +22,14 @@ pipeline {
         steps {
             script {
                 echo "The distro param is " + params.distro
-                if ( params.distro  == "f32") {
+                if ( params.distro  == "fedora32") {
                     mock_cfg = "fedora-32-x86_64-ul"
-                    distro_str = "fedora32"
                 }
                 else if ( params.distro  == "centos7") {
                     mock_cfg = "epel-7-x86_64-ul"
-                    distro_str = "centos7"
                 }
                 else if ( params.distro  == "centos6") {
                     mock_cfg = "epel-6-x86_64-ul"
-                    distro_str = "centos6"
                 }
                 else {
                     error("Invalid value for distro: ${params.distro}")
@@ -117,7 +113,7 @@ pipeline {
                 boolean exists = exitCode == 0
                 if (exists) {
                     sh """
-                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.x86_64.rpm /var/www/html/alpha/${distro}/x86_64 
+                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.x86_64.rpm /var/www/html/alpha/${params.distro}/x86_64 
                     """  
                 }
             }
@@ -126,7 +122,7 @@ pipeline {
                 boolean exists = exitCode == 0
                 if (exists) {
                     sh """
-                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.noarch.rpm /var/www/html/alpha/${distro}/noarch 
+                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.noarch.rpm /var/www/html/alpha/${params.distro}/noarch 
                     """  
                 }
             }
@@ -135,7 +131,7 @@ pipeline {
                 boolean exists = exitCode == 0
                 if (exists) {
                     sh """
-                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.src.rpm /var/www/html/alpha/${distro}/srpms 
+                    sudo -u mirroradmin cp /tmp/pmapi:${BUILD_ID}/*.src.rpm /var/www/html/alpha/${params.distro}/srpms 
                     """  
                 }
             }
@@ -148,7 +144,7 @@ pipeline {
       steps {
           script {
                 String requestBody = common.v2.HttpsRequest.toJson([
-                    'distro':       "${distro}",
+                    'distro':       "${params.distro}",
                     'repo':         "alpha",
                     'arch':         "${env.ARCH_STR}",
                     'rpm':          "${env.BINARY_RPM}" ])
@@ -170,15 +166,15 @@ pipeline {
               
     stage('Update yum repo metadata') {
       steps {
-          sh "sudo -u mirroradmin createrepo --update /var/www/html/alpha/${distro}/"
+          sh "sudo -u mirroradmin createrepo --update /var/www/html/alpha/${params.distro}/"
       }
     }
 
     stage('Refresh promote service cache') {
       steps {
             script {
-                if (distro == "centos6" || distro == "centos7") {
-                    def curl_out = sh(returnStdout: true, script: "curl --silent https://promote.unifiedlayer.com/recache/${distro}").trim()
+                if (params.distro == "centos6" || params.distro == "centos7") {
+                    def curl_out = sh(returnStdout: true, script: "curl --silent https://promote.unifiedlayer.com/recache/${params.disto}").trim()
                 }
 
             }
