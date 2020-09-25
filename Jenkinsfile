@@ -7,7 +7,7 @@ pipeline {
   parameters {
     choice(
         name:       'distro',
-        choices:    ['fedora32', 'centos7', 'centos6'],
+        choices:    ['fedora32', 'centos7'],
         description:'Target Linux distribution'
     )
   }
