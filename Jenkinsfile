@@ -28,9 +28,6 @@ pipeline {
                 else if ( params.distro  == "centos7") {
                     mock_cfg = "epel-7-x86_64-ul"
                 }
-                else if ( params.distro  == "centos6") {
-                    mock_cfg = "epel-6-x86_64-ul"
-                }
                 else {
                     error("Invalid value for distro: ${params.distro}")
                 }
@@ -173,7 +170,7 @@ pipeline {
     stage('Refresh promote service cache') {
       steps {
             script {
-                if (params.distro == "centos6" || params.distro == "centos7") {
+                if (params.distro == "centos7") {
                     def curl_out = sh(returnStdout: true, script: "curl --silent https://promote.unifiedlayer.com/recache/${params.disto}").trim()
                 }
 
