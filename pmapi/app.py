@@ -1,22 +1,17 @@
 #!/usr/bin/python3
 from pmapi.config import Config, get_logger
-from pmapi.controllers.sync import get_sync
-from pmapi.controllers.sign import post_sign
-from pmapi.controllers.promote import post_promote
-from pmapi.controllers.webui import post_deploy_webui
-from pmapi.controllers.healthcheck import get_healthcheck
-from pmapi.controllers.delete import get_completely_delete_rpm, post_delete_rpm
 
 import os
 import logging
 import requests
+import connexion
 from flask import Flask, request
 
 
 logger = get_logger()
 
 
-#if not Config.TOKEN:
+# if not Config.TOKEN:
 #    data = {
 #        "hostname": Config.HOSTNAME,
 #        "ip": Config.IP,
@@ -31,5 +26,9 @@ logger = get_logger()
 #    if "TOKEN" in resp:
 #        update_env("TOKEN", resp["TOKEN"])
 
+flask_app = connexion.FlaskApp(__name__)
+flask_app.add_api("openapi.yaml", validate_responses=True, strict_validation=True)
+app = flask_app.app
+app.config.from_object(Config)
 
 
