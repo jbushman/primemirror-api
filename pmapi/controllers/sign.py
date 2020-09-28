@@ -1,12 +1,15 @@
 from pmapi.services.promote import sign_rpm
 from pmapi.config import get_logger, get_repos
 
+from flask import request
+
 logger = get_logger()
 repos = get_repos()
 
 
-def post_sign(data):
+def post_sign_rpm():
     try:
+        data = request.get_json()
         full_package = "{}/{}/{}/{}".format(repos[data["repo"]]["local"], data["distro"], data["arch"], data["rpm"])
         logger.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
         sign = sign_rpm(data["repo"], full_package)

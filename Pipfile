@@ -10,6 +10,9 @@ python-dotenv = "*"
 requests = "*"
 gunicorn = "*"
 Flask = "*"
+paramiko = "*"
+connexion = "*"
+swagger-ui-bundle = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,11 +1,14 @@
 from pmapi.config import get_logger
 from pmapi.services.delete import completely_delete_rpm, delete_rpm
 
+from flask import request
+
 logger = get_logger()
 
 
-def post_delete_rpm(data):
+def post_delete_rpm():
     try:
+        data = request.get_json()
         logger.info("Deleting {} from {}: ".format(data["package"], data["repo"]))
         del_rpm = delete_rpm(data["repo"], data["distro"], data["arch"], data["package"])
         if del_rpm:
@@ -32,22 +35,23 @@ def post_delete_rpm(data):
         return response, 409
 
 
-def get_completely_delete_rpm(rpm):
+def post_completely_delete_rpm():
     try:
-        logger.info("Completely deleting {} from all repos".format(rpm))
-        del_rpm = completely_delete_rpm(rpm)
+        data = request.get_json()
+        logger.info("Completely deleting {} from all repos".format(data["rpm"]))
+        del_rpm = completely_delete_rpm(data["rpm"])
         if del_rpm:
-            logger.info("RPM {} successfully deleted.".format(rpm))
+            logger.info("RPM {} successfully deleted.".format(data["rpm"]))
             response = {
                 "status": "success",
-                "message": "RPM {} successfully deleted.".format(rpm)
+                "message": "RPM {} successfully deleted.".format(data["rpm"])
             }
             return response, 200
         else:
-            logger.info("Failed to delete RPM {}".format(rpm))
+            logger.info("Failed to delete RPM {}".format(data["rpm"]))
             response = {
                 "status": "failure",
-                "message": "Failed to delete RPM {}".format(rpm)
+                "message": "Failed to delete RPM {}".format(data["rpm"])
             }
             return response, 409
     except Exception as e:
