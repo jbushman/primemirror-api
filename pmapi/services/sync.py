@@ -25,12 +25,12 @@ def sync_repo(repo, distro):
         full_repo = "{}/{}".format(repo, distro)
         logger.info("syncing repo {}".format(full_repo))
         rsyncopts = "-rlptgoH --delay-updates --stats"
-        remotersyncopt = "-e 'ssh -i /home/mirroradmin/.ssh/id_rsa'"
+        remotersyncopts = "-e 'ssh -i /home/mirroradmin/.ssh/id_rsa'"
         local_dir = "{}/{}".format(repos[repo]["local"], distro)
         remote_dir = "{}/{}".format(repos[repo]["remote"], distro)
         mirrors = " mirror@mirrors1.unifiedlayer.com:"
 
-        cmd = "/usr/bin/rsync --delete {} {} {} {} {}".format(rsyncopts, remotersyncopt, local_dir, mirrors, remote_dir)
+        cmd = f"/usr/bin/rsync --delete {rsyncopts} {remotersyncopts} {local_dir} {mirrors} {remote_dir}"
         stat = os.system(cmd)
         if stat != 0:
             raise Exception("Error with rsync.")
