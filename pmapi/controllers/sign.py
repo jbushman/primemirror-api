@@ -1,32 +1,34 @@
-import logging
-
-from pmapi.config import get_config
 from pmapi.services.promote import sign_rpm
+from pmapi.config import get_logger, get_repos
 
-c = get_config()
+from flask import request
+
+logger = get_logger()
+repos = get_repos()
 
 
-def post_sign(data):
+def post_sign_rpm():
     try:
-        package = c[data["repo"]]["local"] + str(data["distro"]) + "/" + data["arch"] + "/" + data["rpm"]
-        logging.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
-        sign = sign_rpm(data["repo"], package)
+        data = request.get_json()
+        full_package = "{}/{}/{}/{}".format(repos[data["repo"]]["local"], data["distro"], data["arch"], data["rpm"])
+        logger.info("Signing RPM {} for {}".format(data["rpm"], data["repo"]))
+        sign = sign_rpm(data["repo"], full_package)
         if sign:
-            logging.info("RPM {} successfully signed for {}".format(data["rpm"], data["repo"]))
+            logger.info("RPM {} successfully signed for {}".format(data["rpm"], data["repo"]))
             response = {
                 "status": "success",
                 "message": "RPM {} successfully signed for {}".format(data["rpm"], data["repo"])
             }
             return response, 200
         else:
-            logging.info("Failed to sign RPM {} for {}".format(data["rpm"], data["repo"]))
+            logger.info("Failed to sign RPM {} for {}".format(data["rpm"], data["repo"]))
             response = {
                 "status": "failure",
                 "message": "Failed to sign RPM {} for {}".format(data["rpm"], data["repo"])
             }
             return response, 409
     except Exception as e:
-        logging.error("RPM sign failed: {}".format(e))
+        logger.error("RPM sign failed: {}".format(e))
         response = {
             "status": "failure",
             "message": "POST sign failed.",

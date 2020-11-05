@@ -1,36 +1,22 @@
-import logging
-import pexpect
+from pmapi.config import get_logger, get_repos
+
 import os
 
-from pmapi.config import get_config
+logger = get_logger()
+repos = get_repos()
 
-c = get_config()
-
-repo_cfg = {
-    'alpha': {
-        'gpg_name':     'EIG Package Management',
-        },
-    'beta': {
-        'gpg_name':     'EIG Beta Signing Authority',
-        },
-    'staging': {
-        'gpg_name':     'EIG Staging Signing Authority',
-        },
-    'production': {
-        'gpg_name':     'EIG Production Signing Authority',
-        }
-}
 
 def sign_rpm(repo, package):
     try:
-        logging.info("Signing {} for repo {}".format(package, repo))
+        logger.info("Signing {} for repo {}".format(package, repo))
         with open("/home/mirroradmin/.rpmmacros", "w") as f:
             f.write("%_signature gpg\n")
             f.write("%_gpg_path /home/mirroradmin/.gnupg\n")
-            f.write("%_gpg_name {}\n".format(repo_cfg[repo]['gpg_name']))
+            f.write("%_gpg_name {}\n".format(repos[repo]["gpg_name"]))
             f.write("%__gpg /bin/gpg1\n")
-        os.system("/home/mirroradmin/rpm-sign-alpha.exp {}".format(package))
+        os.system("/home/mirroradmin/rpm-sign-{}.exp {}".format(repo, package))
+        return True
     except Exception as e:
-        logging.error("Failed to sign {} for repo {}: {}".format(package, repo, e))
+        logger.error("Failed to sign {} for repo {}: {}".format(package, repo, e))
         return False
     return True

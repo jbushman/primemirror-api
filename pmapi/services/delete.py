@@ -1,11 +1,11 @@
 import os
 import glob
-import logging
 
-from pmapi.config import get_config
+from pmapi.config import get_logger, get_repos
 from pmapi.services.sync import update_repo, sync_repo
 
-c = get_config()
+logger = get_logger()
+repos = get_repos()
 
 
 def completely_delete_rpm(package):
@@ -15,8 +15,8 @@ def completely_delete_rpm(package):
     :return: True
     """
     try:
-        logging.info("completely deleting {} from all repo".format(package))
-        rpms = glob.glob('/var/www/html/mirrors/*/*/*/'+package, recursive=True)
+        logger.info("completely deleting {} from all repo".format(package))
+        rpms = glob.glob("/var/www/html/mirrors/*/*/*/{}".format(package), recursive=True)
         for rpm in rpms:
             try:
                 os.remove(rpm)
@@ -24,17 +24,17 @@ def completely_delete_rpm(package):
                 raise Exception("Error while deleting "+rpm)
         return True
     except Exception as e:
-        logging.error("Failed to delete rpm {}: {}".format(rpm, e))
+        logger.error("Failed to delete rpm {}: {}".format(rpm, e))
         raise e
 
 
 def delete_rpm(repo, distro, arch, package):
     try:
-        full_package = c[repo]["local"] + "/" + str(distro) + "/" + arch + "/" + package
+        full_package = "{}/{}/{}/{}".format(repos[repo]["local"], distro, arch, package)
         os.remove(full_package)
         update_repo(repo)
         sync_repo(repo)
         return True
     except Exception as e:
-        logging.error("Error while deleting {}: {} ".format(full_package, e))
+        logger.error("Error while deleting {}: {} ".format(full_package, e))
         raise "Error while deleting {}: {} ".format(full_package, e)

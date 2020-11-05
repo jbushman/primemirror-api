@@ -1,43 +1,45 @@
-import logging
-
-from pmapi.config import get_config
+from pmapi.config import get_logger
 from pmapi.services.sync import sync_repo, update_repo
 
-c = get_config()
+from flask import request
+
+logger = get_logger()
 
 
-def get_sync(repo):
+def post_sync_repo():
     """
     Sync a primemirror repo to the mirrors infrastructure
-    :param repo:
+    :param repo: alpha, beta, staging or production
+    :param distro: centos7 or fedora32
     :return:
     """
     try:
-        logging.info("Updating metadata for {}".format(repo))
-        update = update_repo(repo)
+        data = request.get_json()
+        logger.info("Updating metadata for {}".format(data["repo"]))
+        update = update_repo(data["repo"], data["distro"])
         if update:
-            sync = sync_repo(repo)
+            sync = sync_repo(data["repo"])
             if sync:
-                logging.info("successfully synced {} repo to mirrors".format(repo))
+                logger.info("successfully synced {} repo to mirrors".format(data["repo"]))
                 response = {
                     "status": "success",
-                    "message": "successfully synced {} repo to mirrors".format(repo)
+                    "message": "successfully synced {} repo to mirrors".format(data["repo"])
                 }
                 return response, 200
             else:
-                logging.info("failed to sync {} repo to mirrors".format(repo))
+                logger.info("failed to sync {} repo to mirrors".format(data["repo"]))
                 response = {
                     "status": "failure",
-                    "message": "failed to sync {} repo to mirrors".format(repo)
+                    "message": "failed to sync {} repo to mirrors".format(data["repo"])
                 }
                 return response, 409
         else:
-            logging.info("failed to update {} repo".format(repo))
+            logger.info("failed to update {} repo".format(data["repo"]))
             response = {
                 "status": "failure",
-                "message": "failed to update {} repo".format(repo)
+                "message": "failed to update {} repo".format(data["repo"])
             }
             return response, 409
     except Exception as e:
-        logging.error("failed to sync repo {}: {}".format(repo, e))
+        logger.error("failed to sync repo {}: {}".format(data["repo"], e))
         raise

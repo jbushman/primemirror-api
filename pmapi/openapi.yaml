@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: Bluehost Primemirror API
+  description: the primemirror api
+  contact:
+    email: admin@bluehost.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: /api/1.0.0
+    description: Bluehost Primemirror API
+paths:
+  /:
+    get:
+      summary: get healthcheck
+      operationId: pmapi.controllers.healthcheck.get_healthcheck
+      responses:
+        "200":
+          description: health is good
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/HealthCheck'
+  /delete:
+    post:
+      summary: delete an RPM
+      operationId: pmapi.controllers.delete.post_delete_rpm
+      requestBody:
+        description: Delete an RPM from a repo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteRPM'
+        required: True
+      responses:
+        default:
+          description: successful operation
+  /delete/all:
+    post:
+      summary: delete an RPM from all Repos
+      operationId: pmapi.controllers.delete.post_completely_delete_rpm
+      requestBody:
+        description: Delete an RPM from all repos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteRPMAll'
+        required: True
+      responses:
+        default:
+          description: successful operation
+  /deploy/webui:
+    post:
+      summary: deploy deployment-webui
+      operationId: pmapi.controllers.deploy.post_deploy_webui
+      requestBody:
+        description: Deploy deployment-ui
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployWebUI'
+        required: True
+      responses:
+        default:
+          description: successful operation
+  /promote:
+    post:
+      summary: promote an rpm from one repo to another
+      operationId: pmapi.controllers.promote.post_promote
+      requestBody:
+        description: Promote an rpm from one repo to another
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromoteRPM'
+        required: True
+      responses:
+        default:
+          description: successful operation
+  /sign:
+    post:
+      summary: sign an rpm with gpg key
+      operationId: pmapi.controllers.sign.post_sign_rpm
+      requestBody:
+        description: Sign an RPM for a repo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignRPM'
+        required: True
+      responses:
+        default:
+          description: successful operation
+  /sync:
+    post:
+      summary: sync an rpm repository to AWS S3
+      operationId: pmapi.controllers.sync.post_sync_repo
+      requestBody:
+        description: Sync an rpm repository to AWS S3
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRepo'
+        required: True
+      responses:
+        default:
+          description: successful operation
+components:
+  schemas:
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          example: good
+    DeleteRPM:
+      type: object
+      properties:
+        repo:
+          type: string
+          example: alpha
+        distro:
+          type: string
+          example: centos7
+        arch:
+          type: string
+          example: noarch
+        package:
+          type: string
+          example: eig-hp-core_lib-20200911-1.731957c.el7.noarch.rpm
+    DeleteRPMAll:
+      type: object
+      properties:
+        rpm:
+          type: string
+          example: eig-hp-core_lib-20200911-1.731957c.el7.noarch.rpm
+    DeployWebUI:
+      type: object
+      properties:
+        local_dir:
+          type: string
+          example: /var/www/html
+        remote_dir:
+          type: string
+          example: /var/www/deployment
+        remote_host:
+          type: string
+          example: deployment.unifiedlayer.com
+        remote_user:
+          type: string
+          example: root
+        ssh_key:
+          type: string
+          example: /home/jenkins/.ssh/id_rsa
+    PromoteRPM:
+      type: object
+      properties:
+        init_repo:
+          type: string
+          example: alpha
+        dest_repo:
+          type: string
+          example: beta
+        package:
+          type: string
+          example: eig-hp-core_lib-20200911-1.731957c.el7.noarch.rpm
+        distro:
+          type: string
+          example: centos7
+        arch:
+          type: string
+          example: noarch
+    SignRPM:
+      type: object
+      properties:
+        repo:
+          type: string
+          example: alpha
+        distro:
+          type: string
+          example: centos7
+        arch:
+          type: string
+          example: noarch
+        rpm:
+          type: string
+          example: eig-hp-core_lib-20200911-1.731957c.el7.noarch.rpm
+    SyncRepo:
+      type: object
+      properties:
+        repo:
+          type: string
+          example: alpha
+        distro:
+          type: string
+          example: centos7

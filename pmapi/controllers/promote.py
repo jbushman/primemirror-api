@@ -1,9 +1,8 @@
-import logging
-
-from pmapi.config import get_config
+from pmapi.config import get_logger, get_repos
 from pmapi.services.promote import promote_rpm
 
-c = get_config()
+logger = get_logger()
+repos = get_repos()
 
 
 def post_promote(data):
@@ -16,21 +15,20 @@ def post_promote(data):
     :return:
     """
     try:
-        logging.info("Promoting: {} from {} repo to {} repo".format(data["package"], data["init_repo"],
-                                                                    data["dest_repo"]))
-        init_repo = c[data["init_repo"]]["local"] + str(data["distro"]) + "/" + data["arch"]
-        dest_repo = c[data["dest_repo"]]["local"] + str(data["distro"]) + "/" + data["arch"]
-
-        result = promote_rpm(init_repo, dest_repo, data["package"], data["dest_repo"])
+        logger.info("Promoting: {} from {} repo to {} repo".format(data["package"], data["init_repo"],
+                                                                   data["dest_repo"]))
+        init_repo = "{}/{}/{}".format(repos[data["init_repo"]]["local"], data["distro"], data["arch"])
+        dest_repo = "{}/{}/{}".format(repos[data["dest_repo"]]["local"], data["distro"], data["arch"])
+        result = promote_rpm(init_repo, dest_repo, data["package"], data["dest_repo"], data["distro"])
         if result:
-            logging.info("{} has been promoted to {}".format(data["package"], data["dest_repo"]))
+            logger.info("{} has been promoted to {}".format(data["package"], data["dest_repo"]))
             response = {
                 "status": "success",
                 "message": "Package has been promoted."
             }
             return response, 200
         else:
-            logging.info("Failed to promote {} to {}".format(data["package"], data["dest_repo"]))
+            logger.info("Failed to promote {} to {}".format(data["package"], data["dest_repo"]))
             response = {
                 "status": "failure",
                 "message": "failed to promote {} to {}".format(data["package"], data["dest_repo"])
@@ -38,7 +36,7 @@ def post_promote(data):
             return response, 409
 
     except Exception as e:
-        logging.error("Package promotion failed: {}".format(e))
+        logger.error("Package promotion failed: {}".format(e))
         response = {
             "status": "failure",
             "message": "Package promotion failed.",

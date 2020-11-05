@@ -1,9 +1,7 @@
-import logging
-
-from pmapi.config import get_config
+from pmapi.config import get_logger
 from pmapi.services.sync import sync_directory
 
-c = get_config()
+logger = get_logger()
 
 
 def post_deploy_webui(data):
@@ -13,22 +11,22 @@ def post_deploy_webui(data):
     :return:
     """
     try:
-        logging.info("Updating webui directory {} to remote {}".format(data["local"], data["remote"]))
+        logger.info("Updating webui directory {} to remote {}".format(data["local"], data["remote"]))
         sync = sync_directory(data["remote"], data["local"], data["remote_host"], data["remote_user"], data["commands"])
         if sync:
-            logging.info("successfully synced {} directory to {}".format(data["local"], data["remote_host"]))
+            logger.info("successfully synced {} directory to {}".format(data["local"], data["remote_host"]))
             response = {
                 "status": "success",
                 "message": "successfully synced {} directory to {}".format(data["local"], data["remote_host"])
             }
             return response, 200
         else:
-            logging.info("failed to sync {} directory to {}".format(data["local"], data["remote_host"]))
+            logger.info("failed to sync {} directory to {}".format(data["local"], data["remote_host"]))
             response = {
                 "status": "failure",
                 "message": "failed to sync {} directory to {}".format(data["local"], data["remote_host"])
             }
             return response, 409
     except Exception as e:
-        logging.error("failed to sync directory {}: {}".format(data["local"], e))
+        logger.error("failed to sync directory {}: {}".format(data["local"], e))
         raise e

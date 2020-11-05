@@ -1,31 +1,32 @@
-import logging
-
-from pmapi.config import get_config
+from pmapi.config import get_logger
 from pmapi.services.delete import completely_delete_rpm, delete_rpm
 
-c = get_config()
+from flask import request
+
+logger = get_logger()
 
 
-def post_delete_rpm(data):
+def post_delete_rpm():
     try:
-        logging.info("Deleting {} from {}: ".format(data["package"], data["repo"]))
+        data = request.get_json()
+        logger.info("Deleting {} from {}: ".format(data["package"], data["repo"]))
         del_rpm = delete_rpm(data["repo"], data["distro"], data["arch"], data["package"])
         if del_rpm:
-            logging.info("RPM {} successfully deleted from {}.".format(data["package"], data["repo"]))
+            logger.info("RPM {} successfully deleted from {}.".format(data["package"], data["repo"]))
             response = {
                 "status": "success",
                 "message": "RPM {} successfully deleted from {}.".format(data["package"], data["repo"])
             }
             return response, 200
         else:
-            logging.info("Failed to delete RPM {} from {}".format(data["package"], data["repo"]))
+            logger.info("Failed to delete RPM {} from {}".format(data["package"], data["repo"]))
             response = {
                 "status": "failure",
                 "message": "Failed to delete RPM {} from {}".format(data["package"], data["repo"])
             }
             return response, 409
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         response = {
             "status": "failure",
             "message": "POST delete failed.",
@@ -34,26 +35,27 @@ def post_delete_rpm(data):
         return response, 409
 
 
-def get_completely_delete_rpm(rpm):
+def post_completely_delete_rpm():
     try:
-        logging.info("Completely deleting {} from all repos".format(rpm))
-        del_rpm = completely_delete_rpm(rpm)
+        data = request.get_json()
+        logger.info("Completely deleting {} from all repos".format(data["rpm"]))
+        del_rpm = completely_delete_rpm(data["rpm"])
         if del_rpm:
-            logging.info("RPM {} successfully deleted.".format(rpm))
+            logger.info("RPM {} successfully deleted.".format(data["rpm"]))
             response = {
                 "status": "success",
-                "message": "RPM {} successfully deleted.".format(rpm)
+                "message": "RPM {} successfully deleted.".format(data["rpm"])
             }
             return response, 200
         else:
-            logging.info("Failed to delete RPM {}".format(rpm))
+            logger.info("Failed to delete RPM {}".format(data["rpm"]))
             response = {
                 "status": "failure",
-                "message": "Failed to delete RPM {}".format(rpm)
+                "message": "Failed to delete RPM {}".format(data["rpm"])
             }
             return response, 409
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         response = {
             "status": "failure",
             "message": "POST delete failed.",
