@@ -9,7 +9,7 @@ pipeline {
     choice(
         name:       'distro',
         choices:    ['f32', 'centos7', 'centos6'],
-	default:    'f32',
+	default:    'centos7',
         description:'Target Linux distribution'
     )
   }
