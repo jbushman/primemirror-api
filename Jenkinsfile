@@ -5,14 +5,6 @@ def distro_str
 
 pipeline {
   agent {label 'mockbuild'}
-  parameters {
-    choice(
-        name:       'distro',
-        choices:    ['f32', 'centos7', 'centos6'],
-	default:    'centos7',
-        description:'Target Linux distribution'
-    )
-  }
 
   environment {
     PKG_VERSION = sh(returnStdout: true, script: "python setup.py --version").trim()
@@ -23,22 +15,8 @@ pipeline {
     stage('Set mock configuration') {
         steps {
             script {
-                echo "The distro param is " + params.distro
-                if ( params.distro  == "f32") {
-                    mock_cfg = "fedora-32-x86_64-ul"
-                    distro_str = "fedora32"
-                }
-                else if ( params.distro  == "centos7") {
-                    mock_cfg = "epel-7-x86_64-ul"
-                    distro_str = "centos7"
-                }
-                else if ( params.distro  == "centos6") {
-                    mock_cfg = "epel-6-x86_64-ul"
-                    distro_str = "centos6"
-                }
-                else {
-                    error("Invalid value for distro: ${params.distro}")
-                }
+                mock_cfg = "fedora-32-x86_64-ul"
+                distro_str = "fedora32"
             }
         }
     }
