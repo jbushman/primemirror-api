@@ -1,4 +1,4 @@
-@Library('eigi-jenkins-library')_
+#!/usr/bin/env groovy
 
 def mock_cfg
 def distro_str
