@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pmapi",
-    version="0.0.40",
+    version="0.0.41",
     author="Jacob Bushman",
     author_email="jacob.matthew.bushman@endurance.com",
     description="Primemirror API",
